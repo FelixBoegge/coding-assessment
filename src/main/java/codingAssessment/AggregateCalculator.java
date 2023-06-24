@@ -13,32 +13,37 @@ import java.util.stream.Collectors;
 public class AggregateCalculator {
 	// ------------------------------------------------------------------------------------------------------------------------------------------
 	// class-own attributes
-	static final Map<String, Double> WEIGHTS = Map.of("ABC", 0.1, "MEGA", 0.3, "NGL", 0.4, "TRX", 0.2);
+	private static Map<String, Double> weights;
 	private static List<Trade> allTrades;
 	private static HashMap<LocalDate, HashMap<String, List<Trade>>> mappedTrades;
 	private static HashMap<LocalDate, HashMap<String, HashMap<String, Double>>> results;
 
+	// ------------------------------------------------------------------------------------------------------------------------------------------
+	// constructor to avoid instantiation
+	private AggregateCalculator() {}
+	
 	// ------------------------------------------------------------------------------------------------------------------------------------------
 	// getters and setters
 	public static HashMap<LocalDate, HashMap<String, List<Trade>>> getMappedTrades() {
 		return mappedTrades;
 	}
 
-	public static List<Trade> getAllTrades() {
-		return allTrades;
-	}
-
-	public static void setAllTrades(List<Trade> allTrades) {
+	private static void setAllTrades(List<Trade> allTrades) {
 		AggregateCalculator.allTrades = allTrades;
 	}
 
-	public static void setMappedTrades(HashMap<LocalDate, HashMap<String, List<Trade>>> mappedTrades) {
+	private static void setMappedTrades(HashMap<LocalDate, HashMap<String, List<Trade>>> mappedTrades) {
 		AggregateCalculator.mappedTrades = mappedTrades;
 	}
 	
-	public static void initializeResults() {
+	private static void setResults() {
 		AggregateCalculator.results = new HashMap<>();
 	}
+	
+	public static void setWeights(Map<String, Double> weights) {
+		AggregateCalculator.weights = weights;
+	}
+	
 
 	// ------------------------------------------------------------------------------------------------------------------------------------------
 	// retrieve all distinct tickers
@@ -94,9 +99,9 @@ public class AggregateCalculator {
 	
 	// ------------------------------------------------------------------------------------------------------------------------------------------
 	// saves results of aggregate values to later use for INDEX calculation
-	public static void saveResult(LocalDate date, String ticker, String valueType, double value) {
+	private static void saveResult(LocalDate date, String ticker, String valueType, double value) {
 		if (results == null) {
-			AggregateCalculator.initializeResults();
+			AggregateCalculator.setResults();
 		}
 		if (results.keySet().contains(date)) {
 			if (results.get(date).keySet().contains(ticker)) {
@@ -204,7 +209,7 @@ public class AggregateCalculator {
 						.get(ticker)
 						.get("openPrice");
 			}
-			openPriceIndex += openPrice * WEIGHTS.get(ticker);						// sum up all openPrice times their weights
+			openPriceIndex += openPrice * weights.get(ticker);						// sum up all openPrice times their weights
 		}
 		return openPriceIndex;
 	}
@@ -220,7 +225,7 @@ public class AggregateCalculator {
 						.get(ticker)
 						.get("closePrice");
 			}
-			closePriceIndex += closePrice * WEIGHTS.get(ticker);					// sum up all closePrice times their weights
+			closePriceIndex += closePrice * weights.get(ticker);					// sum up all closePrice times their weights
 		}
 		return closePriceIndex;
 	}
@@ -236,7 +241,7 @@ public class AggregateCalculator {
 						.get(ticker)
 						.get("highestPrice");	// retrieve highestPrice from
 			}
-			highestPriceIndex += highestPrice * WEIGHTS.get(ticker);					// sum up all highestPrice times their weights
+			highestPriceIndex += highestPrice * weights.get(ticker);					// sum up all highestPrice times their weights
 		}
 		return highestPriceIndex;
 	}
@@ -252,7 +257,7 @@ public class AggregateCalculator {
 						.get(ticker)
 						.get("lowestPrice");	// retrieve lowestPrice from
 			}
-			lowestPriceIndex += lowestPrice * WEIGHTS.get(ticker);						// sum up all lowestPrice times their weights
+			lowestPriceIndex += lowestPrice * weights.get(ticker);						// sum up all lowestPrice times their weights
 		}
 		return lowestPriceIndex;
 	}
@@ -271,7 +276,7 @@ public class AggregateCalculator {
 						.get(ticker)
 						.get("dailyTradedVolume");
 			}
-			dailyTradedVolumeIndex += dailyTradedVolumePrice * WEIGHTS.get(ticker);	// sum up all dailyTradedVolume times their weights
+			dailyTradedVolumeIndex += dailyTradedVolumePrice * weights.get(ticker);	// sum up all dailyTradedVolume times their weights
 		}
 		return dailyTradedVolumeIndex;
 	}
