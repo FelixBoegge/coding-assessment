@@ -17,7 +17,12 @@ public class Main {
 		List<Trade> allTrades = reader.getAllTrades(csvFilePath);
 		
 		// provide weights
-		Map<String, Double> weights = Map.of("ABC", 0.1, "MEGA", 0.3, "NGL", 0.4, "TRX", 0.2);
+		Map<String, Double> weights = Map.of(
+				"ABC", 0.1,
+				"MEGA", 0.3,
+				"NGL", 0.4,
+				"TRX", 0.2
+				);
 		AggregateCalculator.setWeights(weights);
 
 		// map all trades to a hashMap with keys = allDistinctDates

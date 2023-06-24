@@ -117,6 +117,7 @@ public class AggregateCalculator {
 		}
 	}
 
+	// -------------------------------------- Calculate all values for all dates for all tickers and INDEX --------------------------------------
 	// ------------------------------------------------------------------------------------------------------------------------------------------
 	// retrieves open price for specific ticker and date
 	public static double getOpenPrice(LocalDate date, String ticker) {
