@@ -25,10 +25,10 @@ public class Main {
 				);
 		AggregateCalculator.setWeights(weights);
 
-		// map all trades to a hashMap with keys = allDistinctDates
-		// values will be nested hashMap with keys = allDistinctTickers
-		// values of nested hashMap are lists of trades for that particular date and ticker
-		// also sets AggregateCalculator's own allTrades list and mappedTrades hashMap
+		// map all trades to a HashMap with keys = allDistinctDates
+		// values will be nested HashMap with keys = allDistinctTickers
+		// values of nested HashMap are lists of trades for that particular date and ticker
+		// also sets AggregateCalculator's own allTrades list and mappedTrades HashMap
 		AggregateCalculator.mapTrades(allTrades);
 
 		print();

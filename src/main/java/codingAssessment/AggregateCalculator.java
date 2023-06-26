@@ -18,7 +18,7 @@ public class AggregateCalculator {
 	private static HashMap<LocalDate, HashMap<String, HashMap<String, Double>>> results;
 
 	// -------------------------------------------------------------------------------------------------------------
-	// constructor to avoid instantiation
+	// private constructor to avoid instantiation
 	private AggregateCalculator() {}
 	
 	// -------------------------------------------------------------------------------------------------------------
@@ -70,9 +70,9 @@ public class AggregateCalculator {
 	}
 
 	// -------------------------------------------------------------------------------------------------------------
-	/* 	map all trades to a hashMap with keys = allDistinctDates
-		values will be nested hashMap with keys = allDistinctTickers
-		values of nested hashMap are lists of trades for that particular date and ticker
+	/* 	map all trades to a HashMap with keys = allDistinctDates
+		values will be nested HashMap with keys = allDistinctTickers
+		values of nested HashMap are lists of trades for that particular date and ticker
 		
 		this method should be called, in order to set the classes own static attributes
 		'allTrades' and 'mappedTrades' */
@@ -97,7 +97,7 @@ public class AggregateCalculator {
 				// fill inner HashMap with trades for corresponding ticker
 				hashMapByDate.get(trade.getCompanyTicker()).add(trade);
 			}
-			// add inner HashMap into outer hashMap with date as key
+			// add inner HashMap into outer HashMap with date as key
 			tradesByDateAndTicker.put(distinctDate, hashMapByDate);
 		}
 		setMappedTrades(tradesByDateAndTicker);
