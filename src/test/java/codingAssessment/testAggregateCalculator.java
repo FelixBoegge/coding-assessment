@@ -67,38 +67,38 @@ class testAggregateCalculator {
 	
 	@Test
 	void test_getOpenPrice_returnsCorrectOpenPrice_If20230609AndNGLIsPassedAsDateAndTickerRespectively() {
-		double openPrice = AggregateCalculator.getOpenPrice(LocalDate.parse("2023-06-09"), "NGL");
+		double openPrice = AggregateCalculator.getAggregateValue(LocalDate.parse("2023-06-09"), "NGL", "openPrice");
 		double trueOpenPrice = 4893.49;
 		assertEquals(trueOpenPrice, openPrice);
 	}
 	
 	@Test
 	void test_getClosePrice_returnsCorrectClosePrice_If20230609AndNGLIsPassedAsDateAndTickerRespectively() {
-		double closePrice = AggregateCalculator.getClosePrice(LocalDate.parse("2023-06-09"), "NGL");
+		double closePrice = AggregateCalculator.getAggregateValue(LocalDate.parse("2023-06-09"), "NGL", "closePrice");
 		double trueClosePrice = 4968.97;
 		assertEquals(trueClosePrice, closePrice);
 	}
 	
 	@Test
 	void test_getOpenPriceIndex_returnsCorrectOpenPriceForINDEX_If20230609IsPassedAsDate() {
-		AggregateCalculator.getOpenPrice(LocalDate.parse("2023-06-09"), "NGL");
-		AggregateCalculator.getOpenPrice(LocalDate.parse("2023-06-09"), "ABC");
-		AggregateCalculator.getOpenPrice(LocalDate.parse("2023-06-09"), "MEGA");
-		AggregateCalculator.getOpenPrice(LocalDate.parse("2023-06-09"), "TRX");
-		AggregateCalculator.getOpenPrice(LocalDate.parse("2023-06-08"), "TRX");
-		double openPriceIndex = AggregateCalculator.getOpenPriceIndex(LocalDate.parse("2023-06-09"));
+		AggregateCalculator.getAggregateValue(LocalDate.parse("2023-06-09"), "NGL", "openPrice");
+		AggregateCalculator.getAggregateValue(LocalDate.parse("2023-06-09"), "ABC", "openPrice");
+		AggregateCalculator.getAggregateValue(LocalDate.parse("2023-06-09"), "MEGA", "openPrice");
+		AggregateCalculator.getAggregateValue(LocalDate.parse("2023-06-09"), "TRX", "openPrice");
+		AggregateCalculator.getAggregateValue(LocalDate.parse("2023-06-08"), "TRX", "openPrice");
+		double openPriceIndex = AggregateCalculator.getAggregateValueIndex(LocalDate.parse("2023-06-09"), "openPrice");
 		double trueOpenPriceIndex = 4022.97;
 		assertEquals(trueOpenPriceIndex, openPriceIndex, 0.01);
 	}
 	
 	@Test
 	void test_getClosePriceIndex_returnsCorrectClosePriceForINDEX_If20230609IsPassedAsDate() {
-		AggregateCalculator.getClosePrice(LocalDate.parse("2023-06-09"), "NGL");
-		AggregateCalculator.getClosePrice(LocalDate.parse("2023-06-09"), "ABC");
-		AggregateCalculator.getClosePrice(LocalDate.parse("2023-06-09"), "MEGA");
-		AggregateCalculator.getClosePrice(LocalDate.parse("2023-06-09"), "TRX");
-		AggregateCalculator.getClosePrice(LocalDate.parse("2023-06-08"), "TRX");
-		double closePrice = AggregateCalculator.getClosePriceIndex(LocalDate.parse("2023-06-09"));
+		AggregateCalculator.getAggregateValue(LocalDate.parse("2023-06-09"), "NGL", "closePrice");
+		AggregateCalculator.getAggregateValue(LocalDate.parse("2023-06-09"), "ABC", "closePrice");
+		AggregateCalculator.getAggregateValue(LocalDate.parse("2023-06-09"), "MEGA", "closePrice");
+		AggregateCalculator.getAggregateValue(LocalDate.parse("2023-06-09"), "TRX", "closePrice");
+		AggregateCalculator.getAggregateValue(LocalDate.parse("2023-06-08"), "TRX", "closePrice");
+		double closePrice = AggregateCalculator.getAggregateValueIndex(LocalDate.parse("2023-06-09"), "closePrice");
 		double trueClosePriceIndex = 4175.40;
 		assertEquals(trueClosePriceIndex, closePrice, 0.01);
 	}

@@ -10,18 +10,18 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class AggregateCalculator {
-	// ------------------------------------------------------------------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------------------------------------
 	// class-own attributes
 	private static Map<String, Double> weights;
 	private static List<Trade> allTrades;
 	private static HashMap<LocalDate, HashMap<String, List<Trade>>> mappedTrades;
 	private static HashMap<LocalDate, HashMap<String, HashMap<String, Double>>> results;
 
-	// ------------------------------------------------------------------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------------------------------------
 	// constructor to avoid instantiation
 	private AggregateCalculator() {}
 	
-	// ------------------------------------------------------------------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------------------------------------
 	// getters and setters
 	public static HashMap<LocalDate, HashMap<String, List<Trade>>> getMappedTrades() {
 		return mappedTrades;
@@ -43,36 +43,39 @@ public class AggregateCalculator {
 		AggregateCalculator.weights = weights;
 	}
 	
-
-	// ------------------------------------------------------------------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------------------------------------
 	// retrieve all distinct tickers
 	public static HashSet<String> getAllTickers() {
-		HashSet<String> distinctTickers = new HashSet<>();		// using a hashSet to only retrieve
-		for (Trade trade : allTrades) {							// distinct tickers
-			distinctTickers.add(trade.getCompanyTicker());		// we do not care for the order
+		// using a HashSet to only retrieve distinct tickers
+		// we do not care for the order
+		HashSet<String> distinctTickers = new HashSet<>();
+		for (Trade trade : allTrades) {
+			distinctTickers.add(trade.getCompanyTicker());
 		}
 		return distinctTickers;
 	}
 
 	// retrieve all distinct dates
 	public static List<LocalDate> getAllDates() {
-		List<LocalDate> distinctDates = new ArrayList<>();		// using a list to retrieve all dates
-		for (Trade trade : allTrades) {							// from all trades
-			if (!distinctDates.contains(trade.getDate())) {		// date is not added if already in list
-				distinctDates.add(trade.getDate());				// list provides ordered dates
+		// using a list to retrieve all dates from all trades
+		List<LocalDate> distinctDates = new ArrayList<>();
+		for (Trade trade : allTrades) {
+			// date is not added if already in list
+			if (!distinctDates.contains(trade.getDate())) {
+				// list provides ordered dates
+				distinctDates.add(trade.getDate());
 			}
 		}
 		return distinctDates;
 	}
 
-	/* ------------------------------------------------------------------------------------------------------------------------------------------
-	 	map all trades to a hashMap with keys = allDistinctDates
+	// -------------------------------------------------------------------------------------------------------------
+	/* 	map all trades to a hashMap with keys = allDistinctDates
 		values will be nested hashMap with keys = allDistinctTickers
 		values of nested hashMap are lists of trades for that particular date and ticker
 		
 		this method should be called, in order to set the classes own static attributes
-		'allTrades' and 'mappedTrades'
-	 */
+		'allTrades' and 'mappedTrades' */
 	
 	public static HashMap<LocalDate, HashMap<String, List<Trade>>> mapTrades(List<Trade> allTrades) {
 
@@ -81,22 +84,27 @@ public class AggregateCalculator {
 
 		for (LocalDate distinctDate : getAllDates()) {
 			HashMap<String, List<Trade>> hashMapByDate = new HashMap<>();
+			// filter by dates
 			List<Trade> tradesByDate = allTrades.stream().filter(trade -> trade.getDate().equals(distinctDate))
-					.collect(Collectors.toList());							// filter by dates
+					.collect(Collectors.toList());
 			for (String distinctTicker : getAllTickers()) {
-				List<Trade> tradesByTicker = new ArrayList<>();				// for each distinct ticker, create a list of trades
-				hashMapByDate.put(distinctTicker, tradesByTicker);			// and put into inner hashMap, even though it might stay empty
+				// for each distinct ticker, create a list of trades
+				// and put into inner HashMap, even though it might stay empty
+				List<Trade> tradesByTicker = new ArrayList<>();
+				hashMapByDate.put(distinctTicker, tradesByTicker);
 			}
 			for (Trade trade : tradesByDate) {
-				hashMapByDate.get(trade.getCompanyTicker()).add(trade);		// fill inner hashMap with trades for corresponding ticker
+				// fill inner HashMap with trades for corresponding ticker
+				hashMapByDate.get(trade.getCompanyTicker()).add(trade);
 			}
-			tradesByDateAndTicker.put(distinctDate, hashMapByDate);			// add inner hashMap into outer hashMap with date as key
+			// add inner HashMap into outer hashMap with date as key
+			tradesByDateAndTicker.put(distinctDate, hashMapByDate);
 		}
 		setMappedTrades(tradesByDateAndTicker);
 		return tradesByDateAndTicker;
 	}
 	
-	// ------------------------------------------------------------------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------------------------------------
 	// saves results of aggregate values to later use for INDEX calculation
 	private static void saveResult(LocalDate date, String ticker, String valueType, double value) {
 		if (results == null) {
@@ -116,9 +124,8 @@ public class AggregateCalculator {
 		}
 	}
 
-	// -------------------------------------- Calculate all values for all dates for all tickers and INDEX --------------------------------------
-	// ------------------------------------------------------------------------------------------------------------------------------------------
-	
+	// ----------------------- Calculate all values for all dates for all tickers and INDEX ------------------------
+	// -------------------------------------------------------------------------------------------------------------
 	public static double getAggregateValue(LocalDate date, String ticker, String valueType) {
 		List<Trade> tradesForGivenTickerAndDate = AggregateCalculator.getMappedTrades().get(date).get(ticker);
 		double aggregateValue;
@@ -129,21 +136,33 @@ public class AggregateCalculator {
 			switch (valueType) {
 			case "openPrice":
 				// retrieve first price of corresponding list
-				aggregateValue = tradesForGivenTickerAndDate.get(0).getPrice();
+				aggregateValue = tradesForGivenTickerAndDate
+						.get(0)
+						.getPrice();
 				break;
 			case "closePrice":
 				// retrieve last price of corresponding list
-				aggregateValue = tradesForGivenTickerAndDate.get(tradesForGivenTickerAndDate.size() - 1).getPrice();
+				aggregateValue = tradesForGivenTickerAndDate
+						.get(tradesForGivenTickerAndDate.size() - 1)
+						.getPrice();
 				break;
 			case "highestPrice":
 				// retrieve last price of corresponding list, sorted in ascending order
-				Collections.sort(tradesForGivenTickerAndDate, (t1, t2) -> Double.compare(t1.getPrice(), t2.getPrice()));
-				aggregateValue = tradesForGivenTickerAndDate.get(tradesForGivenTickerAndDate.size() - 1).getPrice();
+				Collections.sort(
+						tradesForGivenTickerAndDate,
+						(t1, t2) -> Double.compare(t1.getPrice(), t2.getPrice()));
+				aggregateValue = tradesForGivenTickerAndDate
+						.get(tradesForGivenTickerAndDate.size() - 1)
+						.getPrice();
 				break;
 			case "lowestPrice":
 				// retrieve first price of corresponding list, sorted in ascending order
-				Collections.sort(tradesForGivenTickerAndDate, (t1, t2) -> Double.compare(t1.getPrice(), t2.getPrice()));
-				aggregateValue = tradesForGivenTickerAndDate.get(0).getPrice();
+				Collections.sort(
+						tradesForGivenTickerAndDate,
+						(t1, t2) -> Double.compare(t1.getPrice(), t2.getPrice()));
+				aggregateValue = tradesForGivenTickerAndDate
+						.get(0)
+						.getPrice();
 				break;
 			case "dailyTradedVolume":
 				// calculate daily traded volume; sum of all (price * numSecurities)
@@ -161,184 +180,31 @@ public class AggregateCalculator {
 		saveResult(date, ticker, valueType, aggregateValue);
 		return aggregateValue;
 	}
+
+	// -------------------------------------------------------------------------------------------------------------
 	
-	// retrieves open price for specific ticker and date
-	public static double getOpenPrice(LocalDate date, String ticker) {
-		List<Trade> tradesForGivenTickerAndDate = AggregateCalculator.getMappedTrades().get(date).get(ticker);
-		double openPrice;
-		if (tradesForGivenTickerAndDate == null || tradesForGivenTickerAndDate.size() == 0) {
-			// if there are not trades for given date and ticker, set openPrice to 0.0
-			openPrice = 0.0;
-		} else {
-			// retrieve first price of corresponding list
-			openPrice = tradesForGivenTickerAndDate.get(0).getPrice();
-		}
-		saveResult(date, ticker, "openPrice", openPrice);
-		return openPrice;
-	}
-	
-	// retrieves close price for specific ticker and date
-	public static double getClosePrice(LocalDate date, String ticker) {
-		List<Trade> tradesForGivenTickerAndDate = AggregateCalculator.getMappedTrades().get(date).get(ticker);
-		double closePrice;
-		if (tradesForGivenTickerAndDate == null || tradesForGivenTickerAndDate.size() == 0) {
-			// if there are not trades for given date and ticker, set closePrice to 0.0
-			closePrice = 0.0;
-		} else {
-			// retrieve last price of corresponding list
-			closePrice = tradesForGivenTickerAndDate.get(tradesForGivenTickerAndDate.size() - 1).getPrice();
-		}
-		saveResult(date, ticker, "closePrice", closePrice);
-		return closePrice;
-	}
-
-	// retrieves highest price for specific ticker and date
-	public static double getHighestPrice(LocalDate date, String ticker) {
-		List<Trade> tradesForGivenTickerAndDate = AggregateCalculator.getMappedTrades().get(date).get(ticker);
-		double highestPrice;
-		if (tradesForGivenTickerAndDate == null || tradesForGivenTickerAndDate.size() == 0) {
-			// if there are not trades for given date and ticker, set highestPrice to 0.0
-			highestPrice = 0.0;
-		} else {
-			// retrieve last price of corresponding list, sorted in ascending order
-			Collections.sort(tradesForGivenTickerAndDate, (t1, t2) -> Double.compare(t1.getPrice(), t2.getPrice()));
-			highestPrice = tradesForGivenTickerAndDate.get(tradesForGivenTickerAndDate.size() - 1).getPrice();
-		}
-		saveResult(date, ticker, "highestPrice", highestPrice);
-		return highestPrice;
-	}
-
-	// retrieves lowest price for specific ticker and date
-	public static double getLowestPrice(LocalDate date, String ticker) {
-		List<Trade> tradesForGivenTickerAndDate = AggregateCalculator.getMappedTrades().get(date).get(ticker);
-		double lowestPrice;
-		if (tradesForGivenTickerAndDate == null || tradesForGivenTickerAndDate.size() == 0) {
-			// if there are not trades for given date and ticker, set lowestPrice to 0.0
-			lowestPrice = 0.0;
-		} else {
-			// retrieve first price of corresponding list, sorted in ascending order
-			Collections.sort(tradesForGivenTickerAndDate, (t1, t2) -> Double.compare(t1.getPrice(), t2.getPrice()));
-			lowestPrice = tradesForGivenTickerAndDate.get(0).getPrice();
-		}
-		saveResult(date, ticker, "lowestPrice", lowestPrice);
-		return lowestPrice;
-	}
-
-	// calculates daily traded volume for specific ticker and date
-	public static double getDailyTradedVolume(LocalDate date, String ticker) {
-		List<Trade> tradesForGivenTickerAndDate = AggregateCalculator.getMappedTrades().get(date).get(ticker);
-		double dailyTradedVolume = 0.0;
-		if (tradesForGivenTickerAndDate == null || tradesForGivenTickerAndDate.size() == 0) {
-			// if there are not trades for given date and ticker, set dailyTradedVolume to 0.0
-			dailyTradedVolume = 0.0;
-		} else {
-			// calculate daily traded volume; sum of all (price * numSecurities)
-			for (Trade trade : tradesForGivenTickerAndDate) {
-				dailyTradedVolume += (trade.getPrice() * trade.getNumSecurities());
-			}
-		}
-		saveResult(date, ticker, "dailyTradedVolume", dailyTradedVolume);
-		return dailyTradedVolume;
-	}
-
-	// ------------------------------------------------------------------------------------------------------------------------------------------
-	// calculates open price for INDEX using the weights for specific date
-	public static double getOpenPriceIndex(LocalDate date) {
-		double openPriceIndex = 0.0;
-		for (String ticker : getAllTickers()) {										// for all tickers
-			double openPrice = results.get(date).get(ticker).get("openPrice");		// retrieve openPrice from results
+	public static double getAggregateValueIndex(LocalDate date, String valueType) {
+		double aggregateValueIndex = 0.0;
+		// for all tickers
+		for (String ticker : getAllTickers()) {
+			// retrieve aggregateValue from results
+			double aggregateValue = results.get(date).get(ticker).get(valueType);
 			LocalDate previousRecordedDate = date;
-			while (openPrice == 0.0) {												// as long as openPrice = 0.0 -> no value
-				previousRecordedDate = getAllDates()								// find last known day with records
+			// as long as openPrice = 0.0 -> no value
+			while (aggregateValue == 0.0) {
+				// find last known day with records
+				previousRecordedDate = getAllDates()
 						.get(getAllDates().indexOf(previousRecordedDate) -1);
-				openPrice = results													// retrieve openPrice from
+				// retrieve openPrice from last date with know records
+				aggregateValue = results
 						.get(previousRecordedDate)
-//						.get(date.minus(1, ChronoUnit.DAYS))						// previous day
 						.get(ticker)
-						.get("openPrice");
+						.get(valueType);
 			}
-			openPriceIndex += openPrice * weights.get(ticker);						// sum up all openPrice times their weights
+			// sum up all aggregateValues times their weights
+			aggregateValueIndex += aggregateValue * weights.get(ticker);
 		}
-		return openPriceIndex;
+		return aggregateValueIndex;
 	}
 	
-	// calculates close price for INDEX using the weights for specific date
-	public static double getClosePriceIndex(LocalDate date) {
-		double closePriceIndex = 0.0;
-		for (String ticker : getAllTickers()) {										// for all tickers
-			double closePrice = results.get(date).get(ticker).get("closePrice");	// retrieve closePrice from results
-			LocalDate previousRecordedDate = date;
-			while (closePrice == 0.0) {												// as long as closePrice = 0.0 -> no value
-				previousRecordedDate = getAllDates().get(getAllDates().indexOf(previousRecordedDate) -1);
-				closePrice = results												// retrieve closePrice from
-						.get(previousRecordedDate)
-//						.get(date.minus(1, ChronoUnit.DAYS))						// previous day
-						.get(ticker)
-						.get("closePrice");
-			}
-			closePriceIndex += closePrice * weights.get(ticker);					// sum up all closePrice times their weights
-		}
-		return closePriceIndex;
-	}
-
-	// calculates highest price for INDEX using the weights for specific date
-	public static double getHighestPriceIndex(LocalDate date) {
-		double highestPriceIndex = 0.0;
-		for (String ticker : getAllTickers()) {											// for all tickers
-			double highestPrice = results.get(date).get(ticker).get("highestPrice");	// retrieve highestPrice from results
-			LocalDate previousRecordedDate = date;
-			while (highestPrice == 0.0) {												// as long as highestPrice = 0.0 -> no value
-				previousRecordedDate = getAllDates().get(getAllDates().indexOf(previousRecordedDate) -1);
-				highestPrice = results													// retrieve highestPrice from
-						.get(previousRecordedDate)
-//						.get(date.minus(1, ChronoUnit.DAYS))							// previous day
-						.get(ticker)
-						.get("highestPrice");	// retrieve highestPrice from
-			}
-			highestPriceIndex += highestPrice * weights.get(ticker);					// sum up all highestPrice times their weights
-		}
-		return highestPriceIndex;
-	}
-
-	// calculates lowest price for INDEX using the weights for specific date
-	public static double getLowestPriceIndex(LocalDate date) {
-		double lowestPriceIndex = 0.0;
-		for (String ticker : getAllTickers()) {											// for all tickers
-			double lowestPrice = results.get(date).get(ticker).get("lowestPrice");		// retrieve lowestPrice from results
-			LocalDate previousRecordedDate = date;
-			while (lowestPrice == 0.0) {												// as long as lowestPrice = 0.0 -> no value
-				previousRecordedDate = getAllDates().get(getAllDates().indexOf(previousRecordedDate) -1);
-				lowestPrice = results													// retrieve lowestPrice from
-						.get(previousRecordedDate)
-//						.get(date.minus(1, ChronoUnit.DAYS))							// previous day
-						.get(ticker)
-						.get("lowestPrice");	// retrieve lowestPrice from
-			}
-			lowestPriceIndex += lowestPrice * weights.get(ticker);						// sum up all lowestPrice times their weights
-		}
-		return lowestPriceIndex;
-	}
-
-	// calculates daily traded volume for INDEX using the weights for specific date
-	public static double getDailyTradedVolumeIndex(LocalDate date) {
-		double dailyTradedVolumeIndex = 0.0;
-		for (String ticker : getAllTickers()) {							// for all tickers
-			double dailyTradedVolumePrice = results						// retrieve dailyTradedVolume from results
-					.get(date)
-					.get(ticker)
-					.get("dailyTradedVolume");
-			LocalDate previousRecordedDate = date;
-			while (dailyTradedVolumePrice == 0.0) {						// as long as dailyTradedVolume = 0.0 -> no value
-				previousRecordedDate = getAllDates().get(getAllDates().indexOf(previousRecordedDate) -1);
-				dailyTradedVolumePrice = results						// retrieve dailyTradedVolume from
-						.get(previousRecordedDate)
-//						.get(date.minus(1, ChronoUnit.DAYS))			// previous day
-						.get(ticker)
-						.get("dailyTradedVolume");
-			}
-			dailyTradedVolumeIndex += dailyTradedVolumePrice * weights.get(ticker);	// sum up all dailyTradedVolume times their weights
-		}
-		return dailyTradedVolumeIndex;
-	}
-
 }

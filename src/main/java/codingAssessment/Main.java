@@ -80,11 +80,11 @@ public class Main {
 				}
 			}
 			System.out.println("**************** INDEX *****************");
-			double openPriceIndex = AggregateCalculator.getOpenPriceIndex(dayKey);
-			double closePriceIndex = AggregateCalculator.getClosePriceIndex(dayKey);
-			double highestPriceIndex = AggregateCalculator.getHighestPriceIndex(dayKey);
-			double lowestPriceIndex = AggregateCalculator.getLowestPriceIndex(dayKey);
-			double dailyTradedVolumeIndex = AggregateCalculator.getDailyTradedVolumeIndex(dayKey);
+			double openPriceIndex = AggregateCalculator.getAggregateValueIndex(dayKey, "openPrice");
+			double closePriceIndex = AggregateCalculator.getAggregateValueIndex(dayKey, "closePrice");
+			double highestPriceIndex = AggregateCalculator.getAggregateValueIndex(dayKey, "highestPrice");
+			double lowestPriceIndex = AggregateCalculator.getAggregateValueIndex(dayKey, "lowestPrice");
+			double dailyTradedVolumeIndex = AggregateCalculator.getAggregateValueIndex(dayKey, "dailyTradedVolume");
 
 			System.out.println("Open price: " + df.format(openPriceIndex));
 			System.out.println("Close price: " + df.format(closePriceIndex));
