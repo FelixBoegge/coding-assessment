@@ -47,11 +47,11 @@ public class Main {
 			System.out.println("_______________" + dayKey + "_______________");
 			for (String tickerKey : AggregateCalculator.getMappedTrades().get(dayKey).keySet()) {
 				System.out.println("***************** " + tickerKey + " ******************");
-				double openPrice = AggregateCalculator.getOpenPrice(dayKey, tickerKey);
-				double closePrice = AggregateCalculator.getClosePrice(dayKey, tickerKey);
-				double highestPrice = AggregateCalculator.getHighestPrice(dayKey, tickerKey);
-				double lowestPrice = AggregateCalculator.getLowestPrice(dayKey, tickerKey);
-				double dailyTradedVolume = AggregateCalculator.getDailyTradedVolume(dayKey, tickerKey);
+				double openPrice = AggregateCalculator.getAggregateValue(dayKey, tickerKey, "openPrice");
+				double closePrice = AggregateCalculator.getAggregateValue(dayKey, tickerKey, "closePrice");
+				double highestPrice = AggregateCalculator.getAggregateValue(dayKey, tickerKey, "highestPrice");
+				double lowestPrice = AggregateCalculator.getAggregateValue(dayKey, tickerKey, "lowestPrice");
+				double dailyTradedVolume = AggregateCalculator.getAggregateValue(dayKey, tickerKey, "dailyTradedVolume");
 
 				if (openPrice == 0.0) { // -> no value
 					System.out.println("Open price: N/A");
