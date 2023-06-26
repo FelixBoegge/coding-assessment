@@ -31,7 +31,7 @@ a trade object for each record in its ´getAllTrades()´ method. It returns a li
 
 Any Market Log can be analized, as long as it follows the same format.
 
-The utility-class ´AggregateCalculator´ helps to map the data and retrieve & calculate the desired values.
+The utility-class `AggregateCalculator` helps to map the data and retrieve & calculate the desired values.
 It needs to be configured with the´mapTrades()´ and ´setWeights()´ methods.
 The former method maps all trades to a HashMap that holds all distinct dates
 as keys and nested HashMaps as values. Those nested HashMaps hold all distinct company tickers as
