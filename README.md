@@ -32,13 +32,13 @@ a trade object for each record in its ´getAllTrades()´ method. It returns a li
 Any Market Log can be analized, as long as it follows the same format.
 
 The utility-class `AggregateCalculator` helps to map the data and retrieve & calculate the desired values.
-It needs to be configured with the´mapTrades()´ and ´setWeights()´ methods.
+It needs to be configured with the `mapTrades()` and `setWeights()` methods.
 The former method maps all trades to a HashMap that holds all distinct dates
 as keys and nested HashMaps as values. Those nested HashMaps hold all distinct company tickers as
 keys and a list, of all trades for the corresponding company ticker and date, as values.
 The latter sets the weights.
 
-With the ´AggregateCalculator´ set, you can easily retrieve openPrice, closePrice, highestPrice and lowestPrice
+With the `AggregateCalculator` set, you can easily retrieve openPrice, closePrice, highestPrice and lowestPrice
 and calculate the dailyTradedVolume by adding up all prices*numberOfSecurities for a specific date and ticker.
 When those values are retrieved/ calculated, they are automatically saved to a results HashMap, that constructs
 itsself.
@@ -46,7 +46,7 @@ As soon as all those values for a specific date are present in the results HashM
 If, for a specific date, there is no value for one of the tickers, the corresponding value from the previous
 date with a value will be taken to calculate the INDEX.
 
-The ´print()´ method calls the methods to retrieve/ calculate all wanted values and prints them to the screen.
+The `print()` method calls the methods to retrieve/ calculate all wanted values and prints them to the screen.
 If a value is 0.0, 'N/A' will be printed.
 the print will have following structure:
 		
@@ -80,18 +80,18 @@ the print will have following structure:
 
 ## Tests
 You can run the project as JUnit Test
-Two tests will test the Reader class
+2 tests will test the Reader class
 
-- if ´Reader.getAllTrades()´ returns a list of trade objects
-- if ´Reader.getAllTrades()´ returns a list of 104,465 elements
+- if `Reader.getAllTrades()` returns a list of trade objects
+- if `Reader.getAllTrades()` returns a list of 104,465 elements
 
 8 tests will test the AggregateCalculator class
 
-- if ´AggregateCalculator.getAllTickers()´ returns 4 tickers
-- if ´AggregateCalculator.getAllTickers()´ returns the right tickers
-- if ´AggregateCalculator.getAllDates()´ returns 7 dates
-- if ´AggregateCalculator.getAllDates()´ returns the right dates
-- if ´AggregateCalculator.getAggregateValue("openPrice")´ returns right value
-- if ´AggregateCalculator.getAggregateValue("closePrice")´ returns right value
-- if ´AggregateCalculator.getAggregateValueIndex("openPrice")´ returns right value
-- if ´AggregateCalculator.getAggregateValueIndex("openPrice")´ returns right value
+- if `AggregateCalculator.getAllTickers()` returns 4 tickers
+- if `AggregateCalculator.getAllTickers()` returns the right tickers
+- if `AggregateCalculator.getAllDates()` returns 7 dates
+- if `AggregateCalculator.getAllDates()` returns the right dates
+- if `AggregateCalculator.getAggregateValue("openPrice")` returns right value
+- if `AggregateCalculator.getAggregateValue("closePrice")` returns right value
+- if `AggregateCalculator.getAggregateValueIndex("openPrice")` returns right value
+- if `AggregateCalculator.getAggregateValueIndex("openPrice")` returns right value
