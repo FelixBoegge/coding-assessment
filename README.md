@@ -6,7 +6,7 @@
 - browse to your local Eclipse workspace
 - clone this repository with:
 ```
-git clone https://git.fdmgroup.com/f-23-03/felix-boegge-coding-assessment.git
+git clone https://github.com/FelixBoegge/coding-assessment.git
 ```
 - in Eclipse, go to file and import an existing Maven project
 - select the cloned repository
