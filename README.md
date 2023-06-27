@@ -20,7 +20,7 @@ git clone https://github.com/FelixBoegge/coding-assessment.git
 
 ## Description
 The application reads data on trades from a .csv-file.
-The file contains one trade each line and attributes like:
+The file contains one trade each line with attributes:
 - date+time
 - company ticker
 - price
@@ -67,6 +67,13 @@ the print will have following structure:
 		.
 		.
 		.
+		****************** INDEX ******************
+		Open price: value
+		Close price: value
+		Highest price: value
+		Lowest price: value
+		Daily traded volume: value
+		
 		____________________date2___________________
 		***************** ticker1 ******************
 		Open price: value
